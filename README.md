@@ -16,9 +16,9 @@ A Flutter application where users can log in, browse and search products, view p
 ## Flutter Version
 
 
-Flutter | 3.41.9
-Dart | 3.11.5
-DevTools | 2.54.2
+Flutter 3.41.9 |
+Dart 3.11.5 |
+DevTools 2.54.2 |
 
 ---
 
