@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project/models/products_model.dart';
-import 'package:flutter_project/views/home_screen.dart';
 
 class ProductDetail extends StatefulWidget {
   final Product product;
@@ -29,7 +28,7 @@ class _ProductDetailState extends State<ProductDetail> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Image.network(
-            widget.product.image ?? "",
+            widget.product.image,
             height: 350,
             width: double.infinity,
             fit: BoxFit.cover,
@@ -79,7 +78,7 @@ class _ProductDetailState extends State<ProductDetail> {
                 ElevatedButton.icon(
                   onPressed: () {
                     setState(() {
-                      widget.cartIds.add(widget.product.id ?? 0);
+                      widget.cartIds.add(widget.product.id);
                     });
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

@@ -17,7 +17,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
   final LocalStorageService lsservice = LocalStorageService();
   String userName = "";
   String errorMsg = "";
+  bool isFiltering = false;
   List<Product> productsLists = [];
+  List<Product> filteredList = [];
   final ApiService apiService = ApiService();
   bool isLoading = false;
   final TextEditingController searchController = TextEditingController();
@@ -63,7 +65,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   void filterProducts(value) {
-    // filter products.
+    setState(() {
+      isFiltering = value.isNotEmpty;
+      filteredList = productsLists
+          .where((p) => p.name.toLowerCase().contains(value.toLowerCase()))
+          .toList();
+    });
   }
 
   @override
@@ -86,7 +93,15 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
                   IconButton(
                     onPressed: () => {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => CartScreen(products: productsLists, cartIds: cartIds)))
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CartScreen(
+                            products: productsLists,
+                            cartIds: cartIds,
+                          ),
+                        ),
+                      ),
                     },
                     icon: Icon(Icons.shopping_cart_outlined),
                   ),
@@ -116,7 +131,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 child: isLoading
                     ? Center(child: CircularProgressIndicator())
                     : GridView.builder(
-                        itemCount: productsLists.length,
+                        itemCount: isFiltering
+                            ? filteredList.length
+                            : productsLists.length,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           crossAxisSpacing: 12,
@@ -124,11 +141,21 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           childAspectRatio: 0.60,
                         ),
                         itemBuilder: (context, index) {
-                          final product = productsLists[index];
+                          final product = isFiltering
+                              ? filteredList[index]
+                              : productsLists[index];
 
                           return GestureDetector(
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetail(product: product, cartIds: cartIds)));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProductDetail(
+                                    product: product,
+                                    cartIds: cartIds,
+                                  ),
+                                ),
+                              );
                             },
                             child: CustomCard(product: product),
                           );
